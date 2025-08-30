@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intersect® - Impressão 3D Sob Demanda</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            scroll-behavior: smooth;
+        }
+
+        /* Header e Navegação */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(56, 71, 188, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            background: white;
+            color: #3847BC;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.5rem;
+            border: 2px solid #FF0000;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            background: #FF0000;
+            transform: translateY(-2px);
+        }
+
+        /* Seção Hero */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, #3847BC 0%, #FF0000 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-100px); }
+        }
+
+        .hero-content {
+            z-index: 2;
+            max-width: 800px;
+            padding: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .cta-button {
+            background: #FF0000;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Seções */
+        section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h2 {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #3847BC;
+        }
+
+        /* Seção de Produtos */
+        .produtos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .produto {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .produto:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 50px rgba(56, 71, 188, 0.2);
+            border-color: #3847BC;
+        }
+
+        .produto-img {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #3847BC, #FF0000);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .produto h3 {
+            color: #3847BC;
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .produto .preco {
+            color: #FF0000;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        /* Seção Faça seu Pedido */
+        .pedido-container {
+            background: linear-gradient(135deg, #3847BC 0%, #FF0000 100%);
+            border-radius: 20px;
+            padding: 3rem;
+            color: white;
+            text-align: center;
+        }
+
+        .pedido-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .step {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .step-number {
+            background: #FF0000;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Seção Contato */
+        .contato-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .contato-info {
+            background: #3847BC;
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+        }
+
+        .contato-form {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid #3847BC;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #3847BC;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3847BC;
+        }
+
+        /* Seção Sobre */
+        .sobre-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .sobre-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .sobre-features {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #3847BC;
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: #FF0000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            background: #3847BC;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            section {
+                padding: 3rem 1rem;
+            }
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 1001;
+        }
+
+        .scroll-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #3847BC, #FF0000);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Indicador de scroll -->
+    <div class="scroll-indicator">
+        <div class="scroll-progress" id="scrollProgress"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">Intersect®</div>
+            <ul class="nav-links">
+                <li><a href="#produtos">Produtos</a></li>
+                <li><a href="#pedido">Faça seu Pedido</a></li>
+                <li><a href="#contato">Contato</a></li>
+                <li><a href="#sobre">Sobre</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Impressão 3D Sob Demanda</h1>
+            <p>Transformamos suas ideias em realidade com tecnologia de ponta</p>
+            <a href="#pedido" class="cta-button">Faça seu Pedido</a>
+        </div>
+    </section>
+
+    <!-- Seção Produtos -->
+    <section id="produtos">
+        <h2>Nossos Produtos</h2>
+        <div class="produtos-grid">
+            <div class="produto">
+                <div class="produto-img">Protótipos</div>
+                <h3>Protótipos Funcionais</h3>
+                <p>Ideal para testes e validação de conceitos. Material PLA de alta qualidade.</p>
+                <div class="preco">R$ 45,00</div>
+            </div>
+            <div class="produto">
+                <div class="produto-img">Miniaturas</div>
+                <h3>Miniaturas Personalizadas</h3>
+                <p>Personagens, bonecos e objetos decorativos com detalhamento perfeito.</p>
+                <div class="preco">R$ 25,00</div>
+            </div>
+            <div class="produto">
+                <div class="produto-img">Peças Técnicas</div>
+                <h3>Peças Técnicas</h3>
+                <p>Componentes industriais e peças de reposição com precisão milimétrica.</p>
+                <div class="preco">R$ 80,00</div>
+            </div>
+            <div class="produto">
+                <div class="produto-img">Brindes</div>
+                <h3>Brindes Corporativos</h3>
+                <p>Chaveiros, porta-canetas e objetos promocionais personalizados.</p>
+                <div class="preco">R$ 15,00</div>
+            </div>
+            <div class="produto">
+                <div class="produto-img">Ferramentas</div>
+                <h3>Ferramentas Customizadas</h3>
+                <p>Gabaritos, suportes e ferramentas específicas para sua necessidade.</p>
+                <div class="preco">R$ 60,00</div>
+            </div>
+            <div class="produto">
+                <div class="produto-img">Arte & Design</div>
+                <h3>Arte & Design</h3>
+                <p>Esculturas, vasos e objetos artísticos únicos e personalizados.</p>
+                <div class="preco">R$ 90,00</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Faça seu Pedido -->
+    <section id="pedido">
+        <h2>Faça seu Pedido</h2>
+        <div class="pedido-container">
+            <h3 style="margin-bottom: 2rem; font-size: 2rem;">Como Funciona</h3>
+            <div class="pedido-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h4>Envie seu Arquivo</h4>
+                    <p>Formatos aceitos: STL, OBJ, 3MF. Nosso time valida e otimiza seu modelo.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h4>Escolha o Material</h4>
+                    <p>PLA, ABS, PETG, TPU e materiais especiais. Cores variadas disponíveis.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h4>Receba o Orçamento</h4>
+                    <p>Preço transparente baseado em material, tempo e complexidade da peça.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h4>Entrega Rápida</h4>
+                    <p>Impressão em até 48h. Entrega em todo Brasil via correios ou retirada local.</p>
+                </div>
+            </div>
+            <a href="#contato" class="cta-button" style="margin-top: 2rem;">Solicitar Orçamento</a>
+        </div>
+    </section>
+
+    <!-- Seção Contato -->
+    <section id="contato">
+        <h2>Entre em Contato</h2>
+        <div class="contato-grid">
+            <div class="contato-info">
+                <h3 style="margin-bottom: 2rem;">Informações de Contato</h3>
+                <div style="margin-bottom: 1.5rem;">
+                    <h4>📧 Email</h4>
+                    <p>contato@intersect.com.br</p>
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <h4>📱 WhatsApp</h4>
+                    <p>(11) 99999-9999</p>
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <h4>📍 Endereço</h4>
+                    <p>Rua da Inovação, 123<br>São Paulo - SP</p>
+                </div>
+                <div>
+                    <h4>🕒 Horário</h4>
+                    <p>Segunda a Sexta: 8h às 18h<br>Sábado: 8h às 12h</p>
+                </div>
+            </div>
+            <div class="contato-form">
+                <h3 style="margin-bottom: 2rem; color: #3847BC;">Envie sua Mensagem</h3>
+                <form>
+                    <div class="form-group">
+                        <label for="nome">Nome</label>
+                        <input type="text" id="nome" name="nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="assunto">Assunto</label>
+                        <input type="text" id="assunto" name="assunto" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mensagem">Mensagem</label>
+                        <textarea id="mensagem" name="mensagem" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="cta-button">Enviar Mensagem</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Sobre -->
+    <section id="sobre">
+        <h2>Sobre a Intersect®</h2>
+        <div class="sobre-content">
+            <div class="sobre-text">
+                <p>A Intersect® é líder em impressão 3D sob demanda no Brasil. Fundada em 2020, nossa missão é democratizar a manufatura aditiva, oferecendo soluções rápidas, precisas e acessíveis para empresas e indivíduos.</p>
+                
+                <p>Com uma equipe de engenheiros especializados e equipamentos de última geração, transformamos ideias em produtos físicos com qualidade profissional e prazos que superam as expectativas do mercado.</p>
+            </div>
+            <div class="sobre-features">
+                <div class="feature">
+                    <div class="feature-icon">🚀</div>
+                    <div>
+                        <h4>Entrega Rápida</h4>
+                        <p>Impressão em até 48 horas</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <div>
+                        <h4>Alta Qualidade</h4>
+                        <p>Equipamentos profissionais</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">💡</div>
+                    <div>
+                        <h4>Consultoria Técnica</h4>
+                        <p>Suporte especializado</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🌟</div>
+                    <div>
+                        <h4>Materiais Variados</h4>
+                        <p>PLA, ABS, PETG, TPU e mais</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Intersect® - Todos os direitos reservados</p>
+        <p>Impressão 3D Sob Demanda | Transformando Ideias em Realidade</p>
+    </footer>
+
+    <script>
+        // Scroll Progress Indicator
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('scrollProgress').style.width = scrolled + '%';
+        });
+
+        // Intersection Observer para animações de entrada
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observar todas as seções
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Smooth scroll para navegação
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                const headerHeight = document.querySelector('header').offsetHeight;
+                const targetPosition = target.offsetTop - headerHeight;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Header background change on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(56, 71, 188, 0.98)';
+            } else {
+                header.style.background = 'rgba(56, 71, 188, 0.95)';
+            }
+        });
+
+        // Form submission
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Mensagem enviada com sucesso! Entraremos em contato em breve.');
+        });
+
+        // Parallax effect for hero
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            const rate = scrolled * -0.5;
+            hero.style.transform = `translateY(${rate}px)`;
+        });
+    </script>
+</body>
+</html>
