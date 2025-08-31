@@ -40,13 +40,17 @@
         }
 
         .logo {
+            display: flex;
             background: white;
             color: #0000FF;
             padding: 0.5rem 1rem;
             border-radius: 8px;
             font-weight: bold;
             font-size: 1.5rem;
+            width: 195px;
             border: 2px solid #FF0000;
+            align-items: center;
+            justify-content: space-evenly;
         }
 
         .nav-links {
@@ -177,7 +181,7 @@
 
         .produto {
             background: white;
-            border-radius: 15px;
+            border-radius: 20px;
             padding: 1.5rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
@@ -401,7 +405,10 @@
     <!-- Header -->
     <header>
         <nav>
-            <div class="logo">Intersect®</div>
+            <div class="logo">
+                <img style="width: 30px;" src="Intersect® logo 001(degrade).svg" alt="">
+                Intersect®
+            </div>
             <ul class="nav-links">
                 <li><a href="#produtos">Produtos</a></li>
                 <li><a href="#pedido">Faça seu Pedido</a></li>
