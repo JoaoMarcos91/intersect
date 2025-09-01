@@ -108,7 +108,7 @@
         Faça seu pedido pelo
         <a href="https://forms.gle/oRtMVVj3bEFGFzzx9">Google Forms</a>.
       </p>
-      <div class="pedido-container">
+      <!-- <div class="pedido-container">
         <h3 style="margin-bottom: 2rem; font-size: 2rem">Como Funciona</h3>
         <div class="pedido-steps">
           <div class="step">
@@ -139,6 +139,35 @@
         <a href="#contato" class="cta-button" style="margin-top: 2rem"
           >Solicitar Orçamento</a
         >
+      </div> -->
+
+      <div class="pedido-container">
+        <h3 style="margin-bottom: 2rem; font-size: 2rem">Como Funciona</h3>
+        <div
+          style="
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: space-evenly;
+          "
+        >
+          <div class="pedido-steps">
+            <a class="cta-button">Pedido com Arquivo</a>
+            <p>
+              Envie seu arquivo 3D nos formatos STL, OBJ, 3MF, FBX, 3DS, STEP.
+              Nossa equipe irá validar e otimizar o modelo para impressão. Pode
+              levar até 72 horas para a impressão ser entregue.
+            </p>
+          </div>
+          <div class="pedido-steps">
+            <a class="cta-button">Pedido sem Arquivo</a>
+            <p>
+              Descreva sua ideia ou projeto e nossa equipe irá ajudá-lo a criar
+              um modelo 3D personalizado. Pode levar até 5 dias úteis para a
+              entrega da impressão.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -329,13 +358,13 @@
         }
       });
 
-      // Parallax effect for hero
       window.addEventListener("scroll", () => {
         const scrolled = window.pageYOffset;
         const hero = document.querySelector(".hero");
         const rate = scrolled * -0.5;
         hero.style.transform = `translateY(${rate}px)`;
       });
+      // Parallax effect for hero
     </script>
   </body>
 </html>
